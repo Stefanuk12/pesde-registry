@@ -1,0 +1,14 @@
+enable = true
+
+[http.routers.traefik]
+rule = 'Host(`traefik.{{ env "ROOT_DOMAIN" }}`)'
+middlewares = ["traefik_forward_auth"]
+entryPoints = ["websecure"]
+service = "api@internal"
+
+[[http.services.traefik.loadbalancer.servers]]
+url = "http://reverse_proxy:8080"
+
+[[tls.certificates]]
+certFile = "/etc/ssl/certs/rocu.lt.crt"
+keyFile = "/etc/ssl/private/rocu.lt.key"

@@ -1,0 +1,6 @@
+[http.middlewares.traefik_forward_auth.forwardauth]
+address = "http://traefik_forward_auth:4181"
+authResponseHeaders = "X-Forwarded-User"
+
+[[http.services.traefik_forward_auth.loadbalancer.servers]]
+url = "http://traefik_forward_auth:4181"

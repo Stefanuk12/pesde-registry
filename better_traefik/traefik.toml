@@ -1,0 +1,41 @@
+# HTTP to HTTPS global redirection
+[entryPoints]
+  # HTTP --redirect--> HTTPS
+  [entryPoints.web]
+    address = ":80"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+  [entryPoints.websecure]
+    address = ":443"
+    [entryPoints.websecure.http.tls]
+
+# Logging
+[log]
+  level = "DEBUG"
+  filePath = "/logs/traefik.log"
+
+# Metrics (uncomment to enable)
+[metrics.prometheus]
+  buckets = [0.1, 0.3, 1.2, 5.0]
+
+# Traefik dashboard
+[api]
+  dashboard = true
+  insecure = false
+
+# Dynamic configuration file for certs and containers
+[providers.file]
+  directory = "dynamic"
+
+# Docker configuration
+[providers.docker]
+  watch = true
+  exposedByDefault = false
+  network = "traefik-network"
+  endpoint = "unix:///var/run/docker.sock"
+
+# Plugins
+[experimental.plugins.fail2ban]
+  moduleName = "github.com/tomMoulard/fail2ban"
+  version = "v0.8.3"

@@ -1,0 +1,32 @@
+services:
+  registry:
+    image: ghcr.io/pesde-pkg/registry:latest
+    deploy:
+      labels:
+        - "traefik.http.routers.internal.rule=Host(`registry.${HOST_DOMAIN}`)"
+        - "traefik.http.routers.internal.entrypoints=websecure"
+        - "traefik.http.services.internal.loadbalancer.server.port=80"
+    env_file:
+      - .env
+    environment:
+      - "INDEX_REPO_URL=https://github.com/pesde-pkg/index.git"
+      - "GIT_USERNAME=${GIT_USERNAME}"
+      - "GIT_PASSWORD=${GIT_PASSWORD}"
+      - "COMMITTER_GIT_EMAIL=pesde@${HOST_DOMAIN}"
+      - "DATA_DIR={CWD}/data"
+      - "ADDRESS=127.0.0.1"
+      - "PORT=8080"
+
+      # - "READ_NEEDS_AUTH=true"
+      # - "ACCESS_TOKEN=${ACCESS_TOKEN}"
+      # - "READ_ACCESS_TOKEN=${READ_ACCESS_TOKEN}"
+      # - "WRITE_ACCESS_TOKEN=${WRITE_ACCESS_TOKEN}"
+      # - "GITHUB_CLIENT_SECRET=${GITHUV_CLIENT_SECRET}"
+
+      # - "FS_STORAGE_ROOT=${FS_STORAGE_ROOT}"
+
+      # - "SENTRY_DSN=${SENTRY_DSN}"
+
+networks:
+  traefik:
+    external: true

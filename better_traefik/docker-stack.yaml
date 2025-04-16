@@ -1,0 +1,41 @@
+services:
+  reverse_proxy:
+    image: traefik:v3.3
+    restart: unless-stopped
+    env_file:
+      .env
+    ports:
+      # Expose port 80 (HTTP) and 443 (HTTPS)
+      - "80:80"
+      - "443:443"
+    networks:
+      - traefik
+    volumes:
+      # Config
+      - ./traefik.toml:/traefik.toml:ro
+      - ./dynamic:/dynamic:ro
+      # Docker socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Logs dir
+      - ./logs:/logs
+      # SSL
+      - /etc/ssl/certs/rocu.lt.crt:/etc/ssl/certs/rocu.lt.crt:ro
+      - /etc/ssl/private/rocu.lt.key:/etc/ssl/private/rocu.lt.key:ro
+
+  traefik_forward_auth:
+    image: ghcr.io/stefanuk12/traefik-forward-auth:arm64
+    env_file:
+      .env
+    networks:
+      - traefik
+
+  whoami:
+    image: traefik/whoami:latest
+    env_file:
+      .env
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    name: traefik
