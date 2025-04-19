@@ -19,8 +19,8 @@ services:
       # Logs dir
       - ./logs:/logs
       # SSL
-      - /etc/ssl/certs/rocu.lt.crt:/etc/ssl/certs/rocu.lt.crt:ro
-      - /etc/ssl/private/rocu.lt.key:/etc/ssl/private/rocu.lt.key:ro
+      - /etc/ssl/certs/${ROOT_DOMAIN}.crt:/etc/ssl/certs/${ROOT_DOMAIN}.crt:ro
+      - /etc/ssl/private/${ROOT_DOMAIN}.key:/etc/ssl/private/${ROOT_DOMAIN}.key:ro
 
   traefik_forward_auth:
     image: ghcr.io/stefanuk12/traefik-forward-auth:arm64

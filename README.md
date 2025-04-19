@@ -17,7 +17,10 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
 3. Protection - [Cloudflare](https://www.cloudflare.com/en-gb/)
 
-    I strongly recommend you use Cloudflare to protect your servers from DDoS and attacks. View guides online for setting this up for your specific registrar.
+    I strongly recommend you use Cloudflare to protect your servers from DDoS and attacks. View guides online for setting this up for your specific registrar. You need to create an origin server certificate and private key then put them on the server in the following directories. After that, you can enable Strict mdoe.
+
+    - Certificate: `/etc/ssl/certs/${ROOT_DOMAIN}.crt`
+    - Private Key: `/etc/ssl/private/${ROOT_DOMAIN}.key`
 
 4. Protection - [Hardening access](https://github.com/kingcc/cloudflare-ips-only/blob/master/host.sh)
 
