@@ -1,12 +1,6 @@
 services:
   registry:
     image: ghcr.io/stefanuk12/registry:latest
-    deploy:
-      labels:
-        - "traefik.http.routers.registry.rule=Host(`registry.${HOST_DOMAIN}`)"
-        - "traefik.http.routers.registry.service=registry"
-        - "traefik.http.routers.registry.entrypoints=websecure"
-        - "traefik.http.services.registry.loadbalancer.servers[0].url=http://registry:${PORT}"
     env_file:
       - .env
     environment:
