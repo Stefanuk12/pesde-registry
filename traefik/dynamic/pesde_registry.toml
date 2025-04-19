@@ -1,0 +1,7 @@
+[http.routers.registry]
+rule = 'Host(`registry.{{ env "ROOT_DOMAIN" }}`)'
+entryPoints = ["websecure"]
+service = "registry"
+
+[[http.services.registry.loadbalancer.servers]]
+url = "http://registry:8080"
