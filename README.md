@@ -33,7 +33,10 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
 ## Configuration
 
-Each folder ([pesde](./pesde/) and [traefik](./traefik/)) have their respective `.env.template` files. Simply make a copy of them, and edit the configuration to your liking
+Each folder ([pesde](./pesde/) and [traefik](./traefik/)) have their respective `.env.template` files. Simply make a copy of them, and edit the configuration to your liking.
+
+> [!NOTE]
+> You shouldn't need to edit any other files but the environment files. Edit other files with caution.
 
 ### Creating environment files from template
 
