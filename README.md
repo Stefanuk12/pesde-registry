@@ -21,7 +21,7 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
 4. Protection - [Hardening access](https://github.com/kingcc/cloudflare-ips-only/blob/master/host.sh)
 
-    A simple way to protect your server is to only allow Cloudflare IPs to access your server. The [linked script](https://github.com/kingcc/cloudflare-ips-only/blob/master/host.sh) automatically adds the needed `iptables` rules for you. However, **you need to save it manually**. These rules should make it so the ports for HTTP and HTTPS can only be accessed via cloudflare. Other ports will remain open like normal.
+    A simple way to protect your server is to only allow Cloudflare IPs to access your server. The [linked script](https://github.com/kingcc/cloudflare-ips-only/blob/master/host.sh) automatically adds the needed `iptables` rules for you. However, **you need to save it manually**. These rules should make it so the ports for HTTP and HTTPS can only be accessed via Cloudflare. Other ports will remain open like normal.
 
 5. Protection - [Other](https://github.com/dreamsofcode-io/zenstats/blob/main/docs/vps-setup.md)
 
