@@ -27,9 +27,9 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
     You can view more recommended things in the [linked guide](https://github.com/dreamsofcode-io/zenstats/blob/main/docs/vps-setup.md) which covers making a new user and hardening SSH. I recommend you make a user for `traefik` and another user for the pesde `registry` itself.
 
-6. CI/CD + DX (Optional) - [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o), [Video 2](https://www.youtube.com/watch?v=F-9KWQByeU0)
+6. CD (Optional) - [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o), [Video 2](https://www.youtube.com/watch?v=F-9KWQByeU0)
 
-    [Dreams of Code](https://www.youtube.com/@dreamsofcode) has some great videos showing you further setup on the CI/CD and things like `docker context` and `docker stack`. The CI/CD will let you automatically make changes to the configuration on GitHub and see them deployed onto the server.
+    [Dreams of Code](https://www.youtube.com/@dreamsofcode) has some great videos showing you further setup on the CD and things like `docker context` and `docker stack`. The CD will let you automatically make changes to the configuration on GitHub and see them deployed onto the server. I have already put the workflow [here](./.github/workflows/deploy.yaml). If you want to use it, follow [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o) by creating the `DEPLOY_SSH_PRIVATE_KEY` secret and setting the `DEPLOY_HOST` inside of the [workflow file](./.github/workflows/deploy.yaml).
 
 ## Configuration
 

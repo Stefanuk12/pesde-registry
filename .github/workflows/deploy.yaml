@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  - DEPLOY_HOST=rocu.lt
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create environment file
+      run: |
+        echo "GIT_COMMIT_HASH=${{ github.sha }}" >> ./envfile
+
+    - name: Docker Stack Deploy
+      uses: cssnr/stack-deploy-action@v1
+      with:
+        name: pesde
+        file: docker-stack.yaml
+        host: ${{ env.DEPLOY_HOST }}
+        user: deploy
+        ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        env_file: ./envfile
+  
