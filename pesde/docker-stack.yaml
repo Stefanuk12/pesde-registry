@@ -1,6 +1,6 @@
 services:
   registry:
-    image: ghcr.io/stefanuk12/registry:latest
+    image: ghcr.io/stefanuk12/registry:${GIT_COMMIT_HASH:-latest}
     env_file:
       - .env
     environment:
