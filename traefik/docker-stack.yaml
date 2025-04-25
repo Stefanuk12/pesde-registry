@@ -4,6 +4,9 @@ services:
     restart: unless-stopped
     env_file:
       .env
+    environment:
+      - "ROOT_DOMAIN=${ROOT_DOMAIN}"
+      - "SUB_DOMAIN=${SUB_DOMAIN}"
     ports:
       # Expose port 80 (HTTP) and 443 (HTTPS)
       - "80:80"
@@ -26,6 +29,13 @@ services:
     image: ghcr.io/stefanuk12/traefik-forward-auth:arm64
     env_file:
       .env
+    environment:
+      - "ROOT_DOMAIN=${ROOT_DOMAIN}"
+      - "PROVIDERS_GOOGLE_CLIENT_ID=${PROVIDERS_GOOGLE_CLIENT_ID}"
+      - "PROVIDERS_GOOGLE_CLIENT_SECRET=${PROVIDERS_GOOGLE_CLIENT_SECRET}"
+      - "SECRET=${SECRET}"
+      - "WHITELIST=${WHITELIST}"
+      - "LOG_LEVEL=${LOG_LEVEL:-INFO}"
     networks:
       - traefik
 
