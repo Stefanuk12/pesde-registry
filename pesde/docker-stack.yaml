@@ -8,9 +8,9 @@ services:
       - "PORT=8080"
       - "DATA_DIR={CWD}/data/data"
       - "FS_STORAGE_ROOT=/data/fs"
-      - "COMMITTER_GIT_EMAIL=deploy@${HOST_DOMAIN}"
+      - "COMMITTER_GIT_EMAIL=deploy@${ROOT_DOMAIN}"
 
-      - "HOST_DOMAIN=${HOST_DOMAIN}"
+      - "ROOT_DOMAIN=${ROOT_DOMAIN}"
       - "INDEX_REPO_URL=${INDEX_REPO_URL}"
       - "GIT_USERNAME=${GIT_USERNAME}"
       - "GIT_PASSWORD=${GIT_PASSWORD}"
