@@ -30,12 +30,11 @@ services:
     env_file:
       .env
     environment:
-      - "ROOT_DOMAIN=${ROOT_DOMAIN}"
-      - "PROVIDERS_GOOGLE_CLIENT_ID=${PROVIDERS_GOOGLE_CLIENT_ID}"
-      - "PROVIDERS_GOOGLE_CLIENT_SECRET=${PROVIDERS_GOOGLE_CLIENT_SECRET}"
-      - "SECRET=${SECRET}"
-      - "WHITELIST=${WHITELIST}"
-      - "LOG_LEVEL=${LOG_LEVEL:-INFO}"
+      - "providers_google_client_id=${providers_google_client_id}"
+      - "providers_google_client_secret=${providers_google_client_secret}"
+      - "secret=${secret}"
+      - "whitelist=${whitelist}"
+      - "log_level=${log_level:-info}"
     networks:
       - traefik
 
