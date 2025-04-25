@@ -21,7 +21,7 @@ jobs:
       uses: cssnr/stack-deploy-action@v1
       with:
         name: pesde
-        file: docker-stack.yaml
+        file: pesde/docker-stack.yaml
         host: ${{ env.DEPLOY_HOST }}
         user: deploy
         ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
