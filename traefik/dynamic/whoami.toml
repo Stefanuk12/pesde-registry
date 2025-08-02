@@ -1,7 +1,0 @@
-[http.routers.whoami]
-rule = 'Host(`whoami.{{ env "ROOT_DOMAIN" }}`)'
-middlewares = ["traefik_forward_auth"]
-service = "whoami"
-
-[[http.services.whoami.loadbalancer.servers]]
-url = "http://whoami:80"

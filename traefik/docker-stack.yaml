@@ -1,50 +1,71 @@
 services:
   reverse_proxy:
-    image: traefik:v3.3
+    image: traefik:v3.5
     restart: unless-stopped
     env_file:
       .env
-    environment:
-      - "ROOT_DOMAIN=${ROOT_DOMAIN}"
-      - "SUB_DOMAIN=${SUB_DOMAIN}"
     ports:
-      # Expose port 80 (HTTP) and 443 (HTTPS)
       - "80:80"
       - "443:443"
     networks:
       - traefik
+    secrets:
+      - source: ssl_private_key
+        target: /ssl_private_key.pem
+    configs:
+      - source: ssl_public_key
+        target: /ssl_public_key.crt
+      - source: traefik_static
+        target: /traefik.toml
+      - source: traefik_d_pesde_registry
+        target: /dynamic/pesde_registry.toml
+      - source: traefik_d_reverse_proxy
+        target: /dynamic/reverse_proxy.toml
+      - source: traefik_d_tls
+        target: /dynamic/tls.toml
+      - source: traefik_d_traefik_forward_auth
+        target: /dynamic/traefik_forward_auth.toml
+
     volumes:
-      # Config
-      - ./traefik.toml:/traefik.toml:ro
-      - ./dynamic:/dynamic:ro
       # Docker socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # Logs dir
-      - ./logs:/logs
-      # SSL
-      - /etc/ssl/certs/${ROOT_DOMAIN}.crt:/etc/ssl/certs/${ROOT_DOMAIN}.crt:ro
-      - /etc/ssl/private/${ROOT_DOMAIN}.key:/etc/ssl/private/${ROOT_DOMAIN}.key:ro
+      - logs:/logs
 
   traefik_forward_auth:
     image: ghcr.io/stefanuk12/traefik-forward-auth:arm64
     env_file:
       .env
+    networks:
+      - traefik
     environment:
-      - "providers_google_client_id=${PROVIDERS_GOOGLE_CLIENT_ID}"
-      - "providers_google_client_secret=${PROVIDERS_GOOGLE_CLIENT_SECRET}"
-      - "secret=${SECRET}"
-      - "whitelist=${WHITELIST}"
-      - "log_level=${LOG_LEVEL:-info}"
-    networks:
-      - traefik
+      providers_google_client_id: ${PROVIDERS_GOOGLE_CLIENT_ID}
+      providers_google_client_secret: ${PROVIDERS_GOOGLE_CLIENT_SECRET}
+      secret: ${SECRET}
+      whitelist: ${WHITELIST}
+      log_level: ${LOG_LEVEL:-info}
 
-  whoami:
-    image: traefik/whoami:latest
-    env_file:
-      .env
-    networks:
-      - traefik
+volumes:
+  logs:
 
 networks:
   traefik:
     name: traefik
+
+secrets:
+  ssl_private_key:
+    file: ./certs/ssl_private_key.pem
+
+configs:
+  ssl_public_key:
+    file: ./certs/ssl_public_key.crt
+  traefik_static:
+    file: ./traefik.toml
+  traefik_d_pesde_registry:
+    file: ./dynamic/pesde_registry.toml
+  traefik_d_reverse_proxy:
+    file: ./dynamic/reverse_proxy.toml
+  traefik_d_tls:
+    file: ./dynamic/tls.toml
+  traefik_d_traefik_forward_auth:
+    file: ./dynamic/traefik_forward_auth.toml

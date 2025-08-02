@@ -26,13 +26,14 @@
 
 # Dynamic configuration file for certs and containers
 [providers.file]
-  directory = "dynamic"
+  directory = "/dynamic"
+  watch = true
 
 # Docker configuration
 [providers.docker]
   watch = true
   exposedByDefault = false
-  network = "traefik-network"
+  network = "traefik"
   endpoint = "unix:///var/run/docker.sock"
 
 # Plugins

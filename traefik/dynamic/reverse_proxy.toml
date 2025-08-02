@@ -8,7 +8,3 @@ service = "api@internal"
 
 [[http.services.traefik.loadbalancer.servers]]
 url = "http://reverse_proxy:8080"
-
-[[tls.certificates]]
-certFile = "/etc/ssl/certs/rocu.lt.crt"
-keyFile = "/etc/ssl/private/rocu.lt.key"

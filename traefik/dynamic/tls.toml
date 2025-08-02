@@ -1,0 +1,3 @@
+[[tls.certificates]]
+certFile = "/ssl_public_key.crt"
+keyFile = "/ssl_private_key.pem"

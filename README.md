@@ -9,7 +9,7 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
 1. Getting a server - [Free Oracle Cloud](https://github.com/hitrov/oci-arm-host-capacity)
 
-    You can start for free via Oracle Cloud's free tier, giving you a free 24/7 ARM 4 OCPU, 24 GB RAM VM with 50 GB of storage space. This should be enough for most of your needs. However, getting a server can be difficult since there's limited spaces. To get around that, you can use a script to automatically try to get a server each minute. You can view it [here](https://github.com/hitrov/oci-arm-host-capacity).
+    You can start for free via Oracle Cloud's free tier, giving you a free 24/7 ARM 4 OCPU, 24 GB RAM VM with 50 GB of storage space. This should be enough for most of your needs. However, getting a server can be difficult since there's limited spaces. To get around that, you can use a script to automatically try to get a server each minute. You can [view it here](https://github.com/hitrov/oci-arm-host-capacity).
 
 2. Domain registration - [Namecheap](https://www.namecheap.com/)
 
@@ -26,13 +26,15 @@ Easily start up a [pesde](https://pesde.dev/) registry with this docker stack.
 
     A simple way to protect your server is to only allow Cloudflare IPs to access your server. The [linked script](https://github.com/kingcc/cloudflare-ips-only/blob/master/host.sh) automatically adds the needed `iptables` rules for you. However, **you need to save it manually**. These rules should make it so the ports for HTTP and HTTPS can only be accessed via Cloudflare. Other ports will remain open like normal.
 
+    NOTE: If you are using Oracle Cloud, you need to use `firewall-cmd` instead, and disable iptables for Docker.
+
 5. Protection - [Other](https://github.com/dreamsofcode-io/zenstats/blob/main/docs/vps-setup.md)
 
     You can view more recommended things in the [linked guide](https://github.com/dreamsofcode-io/zenstats/blob/main/docs/vps-setup.md) which covers making a new user and hardening SSH. I recommend you make a user for `traefik` and another user for the pesde `registry` itself.
 
 6. CD (Optional) - [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o), [Video 2](https://www.youtube.com/watch?v=F-9KWQByeU0)
 
-    [Dreams of Code](https://www.youtube.com/@dreamsofcode) has some great videos showing you further setup on the CD and things like `docker context` and `docker stack`. The CD will let you automatically make changes to the configuration on GitHub and see them deployed onto the server. I have already put the workflow [here](./.github/workflows/deploy.yaml). If you want to use it, follow [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o) by creating the `DEPLOY_SSH_PRIVATE_KEY` secret and setting the `DEPLOY_HOST` inside of the [workflow file](./.github/workflows/deploy.yaml).
+    [Dreams of Code](https://www.youtube.com/@dreamsofcode) has some great videos showing you further setup on the CD and things like `docker context` and `docker stack`. The CD will let you automatically make changes to the configuration on GitHub and see them deployed onto the server. I have already put [the workflow here](./.github/workflows/deploy.yaml). If you want to use it, follow [Video 1](https://www.youtube.com/watch?v=fuZoxuBiL9o) by creating the `DEPLOY_SSH_PRIVATE_KEY` secret and setting the `DEPLOY_HOST` inside of the [workflow file](./.github/workflows/deploy.yaml).
 
 ## Configuration
 
@@ -73,13 +75,48 @@ In each template file, I've put the minimal recommended variables. I have also l
 
 For the [pesde configuration](./pesde/.env.template), I strongly recommend making a new GitHub user and the password must be a [PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). Make sure the user has at least `push` permissions to the `index` repository.
 
-For the [traefik configuration](./traefik/.env.template), you're asked for some Google API details. This makes your `traefik` instance more secure by adding a strong OAuth allowlist on accessing critical parts like the dashboard and `whoami`. You can view the official guide on setup [here](https://github.com/thomseddon/traefik-forward-auth/wiki/Provider-Setup#google).
+For the [traefik configuration](./traefik/.env.template), you're asked for some Google API details. This makes your `traefik` instance more secure by adding a strong OAuth allowlist on accessing critical parts like the dashboard and `whoami`. You can view the [official guide on setup here](https://github.com/thomseddon/traefik-forward-auth/wiki/Provider-Setup#google).
+
+### Adding your Cloudflare certificates
+
+1. Grab your origin server certificate and private key from Cloudflare
+2. Create a new folder inside `traefik/certs`
+3. Create a file called `ssl_public_key.crt` and put your certificate there
+4. Create a file called `ssl_private_key.pem` and put your private key there
 
 ## Making the index repository
 
-The index is a repository that contains metadata about all the packages in the registry. You can view the official guide on making it [here](https://docs.pesde.dev/guides/self-hosting-registries/#making-the-index-repository).
+The index is a repository that contains metadata about all the packages in the registry. You can view the [official guide on making it here](https://docs.pesde.dev/guides/self-hosting-registries/#making-the-index-repository).
 
 ## Running
+
+### About docker context and swarm
+
+Docker provides some useful tools for remote deployment. [Docker context](https://docs.docker.com/engine/manage-resources/contexts/) lets you run docker commands on your computer, as if they were on another host. On the other hand, [Docker swarm](https://docs.docker.com/engine/swarm/) is like kubernetes-lite. When combined, we can perform the entire deployment on your home computer, without needing to SSH into the remote computer.
+
+### Initialising the docker context
+
+To start, create a new context, replacing `USERNAME` and `IP_ADDRESS_OR_DOMAIN`
+
+```bash
+docker context create pesde-reg --docker "host=ssh://USERNAME@IP_ADDRESS_OR_DOMAIN"
+```
+
+Then, use the context.
+
+```bash
+docker context use pesde-reg
+```
+
+### Initialising the docker swarm
+
+Simply run this command. Note that the output of this command can be retrieved at any time, so you can safely dismiss it!
+
+```bash
+docker swarm init
+```
+
+### Deployment
 
 Finally, you can run the entire stack with these commands, assuming you're `cd` into the respective directory on the server
 
